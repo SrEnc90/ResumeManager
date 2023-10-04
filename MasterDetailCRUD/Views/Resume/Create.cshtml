@@ -1,0 +1,211 @@
+﻿@model MasterDetailCRUD.Models.Applicant
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="col-11 mx-auto pt-0">
+    <div class="card shadow">
+        <div class="card-hearder bg-primary text-uppercase text-white" style="height: 45px;">
+            <h4>Create Applicant</h4>
+        </div>
+
+        <form id="ApplicantForm" enctype="multipart/form-data" asp-action="Create">
+
+            <div class="card-body">
+                <div class="row">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Gender" class="control-label"></label>
+                            <input asp-for="Gender" class="form-control" />
+                            <span asp-validation-for="Gender" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Age" class="control-label"></label>
+                            <input asp-for="Age" class="form-control" />
+                            <span asp-validation-for="Age" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Qualification" class="control-label"></label>
+                            <input asp-for="Qualification" class="form-control" />
+                            <span asp-validation-for="Qualification" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="TotalExperiencie" class="control-label"></label>
+                            <input asp-for="TotalExperiencie" class="form-control" />
+                            <span asp-validation-for="TotalExperiencie" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 btn-group">
+                        <div class="form-group col-9 p-0">
+                            <label asp-for="ProfilePhoto" class="form-label"></label>
+                            <div class="input-group">
+                                <input asp-for="ProfilePhoto" class="form-control custom-file-input" id="customFile"
+                                    onchange="document.getElementById('PreviewPhoto').src = window.URL.createObjectURL(this.files[0])"/>
+                                <label class="input-group-text custom-file-label" for="customFile">Upload</label>
+                            </div>
+                        </div>
+                        <span asp-validation-for="ProfilePhoto" class="text-danger"></span>
+
+                        <div class="form-group col-3 p-0">
+                            <img id="PreviewPhoto" src="~/image/noimage.jpg" alt="Logo Image" class="border rounded-3 ms-2 mt-2" style="width: 110px; height: 110px;" />
+                        </div>
+                    </div>
+
+                    <div class="p-2 my-2">
+
+                        <table id="ExpTable" class="table table-sm table-hover" style="margin-bottom: 0 !important">
+                            <thead class="table-info">
+                                <tr>
+                                    <th class="text-center">Company Name</th>
+                                    <th class="text-center">Designation</th>
+                                    <th class="text-center">Years Worked</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @* @foreach (var item in Model.Experiences) *@
+                                @for (int i = 0; i < Model.Experiences.Count; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            @******************Html Helpers están obsoletos(Por eso lo comentamos y colcoamos algo más actual)***********************@
+
+                                            @* @Html.EditorFor(x => x.Experiences[i].CompanyName, new { ValidationMessage = "El nombre debe ser válido", 
+                                                htmlAttributes = new { @class="form-control" }})
+                                            @Html.ValidationMessageFor(x => x.Experiences[i].CompanyName, "", new { @class = "text-danger" }) *@
+                                            <input type="text" asp-for="@Model.Experiences[i].CompanyName" class="form-control">
+                                            <span asp-validation-for="@Model.Experiences[i].CompanyName" class="text-danger"></span>
+                                        </td>
+                                        <td>
+                                            @* @Html.EditorFor(x => x.Experiences[i].Designation, new { ValidationMessage = "El nombre debe ser válido", 
+                                                htmlAttributes = new { @class="form-control" }})
+                                            @Html.ValidationMessageFor(x => x.Experiences[i].Designation, "", new { @class = "text-danger" }) *@
+                                            <input type="text" asp-for="@Model.Experiences[i].Designation" class="form-control">
+                                            <span asp-validation-for="@Model.Experiences[i].Designation" class="text-danger"></span>
+                                        </td>
+                                        <td>
+                                            @* @Html.EditorFor(x => x.Experiences[i].YearsWorked, new { ValidationMessage = "El nombre debe ser válido",
+                                                htmlAttributes = new { @class="form-control" }})
+                                            @Html.ValidationMessageFor(x => x.Experiences[i].YearsWorked, "", new { @class = "text-danger" }) *@
+                                            <input type="number" asp-for="@Model.Experiences[i].YearsWorked" class="form-control">
+                                            <span asp-validation-for="@Model.Experiences[i].YearsWorked" class="text-danger"></span>
+                                        </td>
+                                        <td>
+
+                                            <button id="btnDummy-@i" type="button" class="btn btn-sm invisible">Dummy</button>
+
+                                            <button id="btnAdd-@i" class="btn btn-sm btn-secondary visible" type="button" onclick="AddItem(this)" style="left: 90%; position: absolute;">
+                                                Agregar
+                                            </button>
+                                            
+                                            <button id="btnRemove-@i" type="button" class="btn btn-sm btn-danger invisible" onclick="DeleteItem(this)" style="left: 90%; position: absolute;">
+                                                Eliminar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <input type="hidden" id="hdnLastIndex" value="0" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer col-12 btn-group">
+                <div class="col-6 text-end p-2">
+                    <a asp-action="Index" class="btn btn-secondary">Volver</a>
+                </div>
+                <div class="col-6 text-start p-2">
+                    <input type="submit" value="Grabar" class="btn btn-primary" />
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+        
+        // $(".custom-file-input").on("change", function () {
+        //     let fileName = $(this).val().split("\\").pop();
+        //     $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        // });
+
+        function DeleteItem(btn) {
+            $(btn).closest('tr').remove();
+        }
+
+        function AddItem(btn){
+            var table = document.getElementById("ExpTable")
+            var rows = table.querySelectorAll('tr');
+
+            var rowOuterHTML = rows[rows.length - 1].outerHTML;
+
+            var lastRowIdx = document.getElementById('hdnLastIndex').value;
+            var nextRowIdx = eval(lastRowIdx) + 1;
+            document.getElementById('hdnLastIndex').value = nextRowIdx;
+
+            rowOuterHTML = rowOuterHTML.replaceAll('_' + lastRowIdx + '_', '_' + nextRowIdx + '_');
+            rowOuterHTML = rowOuterHTML.replaceAll('[' + lastRowIdx + ']', '[' + nextRowIdx + ']');
+            rowOuterHTML = rowOuterHTML.replaceAll('-' + lastRowIdx, '-' + nextRowIdx);
+
+            var newRow = table.insertRow();
+            newRow.innerHTML = rowOuterHTML;
+
+            var btnAddId = btn.id;
+            var btnDeleteId = btnAddId.replaceAll('btnAdd', 'btnRemove');
+
+            var delBtn = document.getElementById(btnDeleteId);
+            delBtn.classList.add("visible");
+            delBtn.classList.remove("invisible");
+
+            var addBtn = document.getElementById(btnAddId);
+            addBtn.classList.add("invisible");
+            addBtn.classList.remove("visible");
+
+            rebIndValidators();
+        }
+
+        /*
+        El problema con jquery es que solo los inputs que están disponibles al momento de correr la aplicación van a seguir las validaciones 
+        (el archivo jquery.validate.unobtrusive.js no funciona con las etiquetas insertadas dinámicamente solo los que están en tiempo de ejecución) 
+        */
+
+        function rebIndValidators() {
+
+            var $form = $("#ApplicantForm");
+
+            $form.unbind(); //Remueve todos los controles de jqery del formulario
+
+            $form.data("validator", null); //Limpiamos todas la validaciones del formulario
+
+            $.validator.unobtrusive.parse($form); //Añade las validaciones de nuevo
+
+            $form.validate($form.data("unobtrusiveValidation").options);
+        }
+
+    </script>
+}
