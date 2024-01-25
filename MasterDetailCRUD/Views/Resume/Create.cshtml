@@ -4,6 +4,39 @@
     ViewData["Title"] = "Create";
 }
 
+<style>
+
+    .CodesTable table {
+        width: 100%;
+    }
+
+    .CodesTable thead {
+        width: calc(100% - 1em);
+    }
+
+    .CodesTable tbody {
+        display: block;
+        height: 140px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .CodesTable thead, .CodesTable tbody tr {
+        display: table;
+        width: 97%;
+        table-layout: fixed;
+    }
+
+    .CodesTable thead, .CodesTable tbody, .CodesTable td {
+        border: none !important;
+    }
+
+    .YearsWorked {
+        background-image: none;
+    }
+
+</style>
+
 <div class="col-11 mx-auto pt-0">
     <div class="card shadow">
         <div class="card-hearder bg-primary text-uppercase text-white" style="height: 45px;">
@@ -26,7 +59,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label asp-for="Gender" class="control-label"></label>
-                            <input asp-for="Gender" class="form-control" />
+                            <select asp-for="Gender" class="form-control" asp-items="@ViewBag.Gender" ></select>
                             <span asp-validation-for="Gender" class="text-danger"></span>
                         </div>
                     </div>
@@ -50,8 +83,8 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label asp-for="TotalExperiencie" class="control-label"></label>
-                            <input asp-for="TotalExperiencie" class="form-control" />
-                            <span asp-validation-for="TotalExperiencie" class="text-danger"></span>
+                            <input asp-for="TotalExperiencie" class="form-control-plaintext" readonly />
+                            @* <span asp-validation-for="TotalExperiencie" class="text-danger"></span> *@
                         </div>
                     </div>
 
@@ -71,15 +104,20 @@
                         </div>
                     </div>
 
-                    <div class="p-2 my-2">
+                    <div class="p-2 my-2 bg-light">
 
-                        <table id="ExpTable" class="table table-sm table-hover" style="margin-bottom: 0 !important">
+                        <table id="ExpTable" class="table table-sm table-hover CodesTable" style="margin-bottom: 0 !important">
                             <thead class="table-info">
                                 <tr>
                                     <th class="text-center">Company Name</th>
                                     <th class="text-center">Designation</th>
                                     <th class="text-center">Years Worked</th>
-                                    <th></th>
+                                    <th class="text-center" style="width: 75px;">
+                                        <button id="btnAddExperience" class="btn btn-sm btn-secondary visible" type="button" onclick="AddItem(this)" >
+                                        @* style="left: 94%; position: absolute;"> *@
+                                            ADD
+                                        </button>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -88,7 +126,7 @@
                                 {
                                     <tr>
                                         <td>
-                                            @******************Html Helpers están obsoletos(Por eso lo comentamos y colcoamos algo más actual)***********************@
+                                            @******************Html Helpers están obsoletos(Por eso lo comentamos y colocamos algo más actual)***********************@
 
                                             @* @Html.EditorFor(x => x.Experiences[i].CompanyName, new { ValidationMessage = "El nombre debe ser válido", 
                                                 htmlAttributes = new { @class="form-control" }})
@@ -107,19 +145,16 @@
                                             @* @Html.EditorFor(x => x.Experiences[i].YearsWorked, new { ValidationMessage = "El nombre debe ser válido",
                                                 htmlAttributes = new { @class="form-control" }})
                                             @Html.ValidationMessageFor(x => x.Experiences[i].YearsWorked, "", new { @class = "text-danger" }) *@
-                                            <input type="number" asp-for="@Model.Experiences[i].YearsWorked" class="form-control">
+                                            <input type="number" asp-for="@Model.Experiences[i].YearsWorked" class="form-control YearsWorked">
                                             <span asp-validation-for="@Model.Experiences[i].YearsWorked" class="text-danger"></span>
                                         </td>
-                                        <td>
+                                        <td style="width: 60px;">
 
-                                            <button id="btnDummy-@i" type="button" class="btn btn-sm invisible">Dummy</button>
-
-                                            <button id="btnAdd-@i" class="btn btn-sm btn-secondary visible" type="button" onclick="AddItem(this)" style="left: 90%; position: absolute;">
-                                                Agregar
-                                            </button>
+                                            @* <button id="btnDummy-@i" type="button" class="btn btn-sm invisible">Dummy</button> *@
                                             
-                                            <button id="btnRemove-@i" type="button" class="btn btn-sm btn-danger invisible" onclick="DeleteItem(this)" style="left: 90%; position: absolute;">
-                                                Eliminar
+                                            <button id="btnRemove-@i" type="button" class="btn btn-sm btn-danger visible" onclick="DeleteItem(this)" >
+                                                @* style="left: 88%; position: absolute;"> *@
+                                                DELETE
                                             </button>
                                         </td>
                                     </tr>
@@ -145,7 +180,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 
     <script type="text/javascript">
         
@@ -154,8 +189,39 @@
         //     $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
         // });
 
+        function CalcTotalExperiencies() {
+            let x = document.getElementsByClassName('YearsWorked');
+            let totalExp = 0;
+            let i;
+
+            for (i = 0; i < x.length; i++) {
+                totalExp = totalExp + eval(x[i].value);
+            }
+
+            document.getElementById('TotalExperiencie').value = totalExp;
+
+            return;
+        }
+
+        document.addEventListener('change', function (e) {
+            if (e.target.classList.contains('YearsWorked')) {
+                CalcTotalExperiencies();
+            }
+        }, false);
+
         function DeleteItem(btn) {
+
+            let table = document.getElementById("ExpTable");
+            let rows = table.getElementsByTagName("tr");
+
+            if (rows.length == 2) {
+                alert("This Row Cannot be Deleted");
+                return;
+            }
+
             $(btn).closest('tr').remove();
+
+            CalcTotalExperiencies();
         }
 
         function AddItem(btn){

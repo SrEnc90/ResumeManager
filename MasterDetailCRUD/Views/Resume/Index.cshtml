@@ -4,19 +4,36 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<style>
+    .avatar {
+        vertical-align: middle;
+        width: 40px;
+        height40px;
+        border-radius: 50%;
+    }
+
+</style>
+
+@* <h1>Index</h1>
 
 <p>
     <a asp-action="Create" class="btn btn-lg btn-outline-success">Crear Nuevo</a>
-</p>
-
-@* <p>
-    <button type="submit" class="btn btn-outline-success" asp-action="Create" asp-controller="Resume">Crear Nuevo</button>
 </p> *@
+
+<div class="container btn-group">
+    <div class="col-10">
+        <div class="h1">Applicants</div>
+    </div>
+
+    <div class="col-2 btn-group justify-cotent-end p-3">
+        <a asp-action="Create" class="btn btn-sm btn-success">Create New</a>
+    </div>
+</div>
 
 <table class="table table-sm table-hover">
     <thead class="table-dark">
         <tr>
+            <th></th>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
@@ -38,6 +55,9 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                <img src = "~/image/@item.PhotoUrl" alt = "" class="avatar"/>
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>

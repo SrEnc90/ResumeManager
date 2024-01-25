@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace MasterDetailCRUD.Controllers
 {
@@ -20,10 +21,10 @@ namespace MasterDetailCRUD.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<Applicant>> Index()
+        public async Task<ActionResult<IEnumerable<Applicant>>> Index()
         {
             List<Applicant> applicants;
-            applicants = _context.Applicants.ToList();
+            applicants = await _context.Applicants.ToListAsync();
             return View(applicants);
         }
 
@@ -35,6 +36,8 @@ namespace MasterDetailCRUD.Controllers
             applicant.Experiences.Add(new Experience() { ExperienceId = 1 });
             //applicant.Experiences.Add(new Experience() { ExperienceId = 2 });
             //applicant.Experiences.Add(new Experience() { ExperienceId = 3 });
+
+            ViewBag.Gender = GetGender();
 
             return View(applicant);
         }
@@ -68,10 +71,9 @@ namespace MasterDetailCRUD.Controllers
                 string uploadsFolder = Path.Combine(_webHost.WebRootPath, "image");
                 uniqueFileName = Guid.NewGuid().ToString() + "_" + applicant.ProfilePhoto.FileName;
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    applicant.ProfilePhoto.CopyTo(fileStream);
-                }
+                using var fileStream = new FileStream(filePath, FileMode.Create);
+                applicant.ProfilePhoto.CopyTo(fileStream);
+                
             }
             return uniqueFileName;
         }
@@ -112,6 +114,35 @@ namespace MasterDetailCRUD.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction("index");
+        }
+
+        private List<SelectListItem> GetGender()
+        {
+
+            List<SelectListItem> selGender = new List<SelectListItem>();
+
+            //Al colocar como Value = null, no valida en el formulario que el <option> del select tenga un valor correcto, debo colocarlo cómo vacío (entre " ")
+            //var selItem = new SelectListItem() { Value = null, Text = "Select Gender" };
+            var selItem = new SelectListItem() { Value = "", Text = "Select Gender" };
+
+            selGender.Insert(0, selItem);
+
+            selItem = new SelectListItem()
+            {
+                Value = "Male",
+                Text = "Male"
+            };
+            selGender.Add(selItem);
+
+            selItem = new SelectListItem()
+            {
+                Value = "Female",
+                Text = "Fenale"
+            };
+            selGender.Add(selItem);
+
+            return selGender;
+
         }
     }
 }
