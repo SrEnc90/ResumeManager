@@ -16,3 +16,53 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/*Sticky footer style*/
+/*--------------------------------------------------------------------*/
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    /*Margin bottom by footer height*/
+    margin-bottom: 60px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px; /*Vertically center the text there*/
+}
+/*--------------------------------------------------------------------*/
+
+.CodesTable table {
+    width: 100%;
+}
+
+.CodesTable thead {
+    width: calc(100% - 1em);
+}
+
+.CodesTable tbody {
+    display: block;
+    height: 140px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+    .CodesTable thead, .CodesTable tbody tr {
+        display: table;
+        width: 97%;
+        table-layout: fixed;
+    }
+
+.CodesTable thead, .CodesTable tbody, .CodesTable td {
+    border: none !important;
+}
+
+.YearsWorked {
+    background-image: none;
+}

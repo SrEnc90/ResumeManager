@@ -33,7 +33,9 @@ namespace MasterDetailCRUD.Controllers
         {
             Applicant applicant = new Applicant();
 
-            applicant.Experiences.Add(new Experience() { ExperienceId = 1 });
+            applicant.Experiences = new List<Experience>() { new Experience() { ExperienceId = 1 } };
+
+            //applicant.Experiences.Add(new Experience() { ExperienceId = 1 });
             //applicant.Experiences.Add(new Experience() { ExperienceId = 2 });
             //applicant.Experiences.Add(new Experience() { ExperienceId = 3 });
 
@@ -46,6 +48,7 @@ namespace MasterDetailCRUD.Controllers
         public async Task<ActionResult> Create(Applicant applicant)
         {
             applicant.Experiences.RemoveAll(e => e.YearsWorked == 0); // Para que al agregar una nueva fila en la tabla experiencia y al no llenar nada me la elimine
+            applicant.Experiences.RemoveAll(e => e.IsDeleted == true);//Para arreglar el problema del model binding
 
             /* Más corto arriba
             foreach (Experience experience in applicant.Experiences)
@@ -93,6 +96,52 @@ namespace MasterDetailCRUD.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult<Applicant>> Edit(int Id)
+        {
+            var existe = await _context.Applicants.AnyAsync(x => x.Id == Id);
+            if (!existe) return NotFound($"No existe Applicant con el id: {Id}");
+
+            Applicant applicant = await _context.Applicants
+                .Include(a => a.Experiences)
+                .FirstOrDefaultAsync(x => x.Id == Id);
+
+            ViewBag.Gender = GetGender();
+
+            if (applicant.Experiences.Count == 0)
+            {
+                applicant.Experiences = new List<Experience>() { new Experience() { ExperienceId = 1 } };
+            }
+
+            return View(applicant);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Applicant>> Edit(Applicant applicant)
+        {
+
+            List<Experience> experiences = await _context.Experiences.Where(x => x.ApplicationId == applicant.Id).ToListAsync();
+            _context.RemoveRange(experiences);
+            await _context.SaveChangesAsync();
+
+            applicant.Experiences.RemoveAll(e => e.YearsWorked == 0);
+            applicant.Experiences.RemoveAll(e => e.IsDeleted == true);//Para arreglar el problema del model binding
+
+            if (applicant.ProfilePhoto != null)
+            {
+                string uniqueFileName = GetUploadFileName(applicant);
+                applicant.PhotoUrl = uniqueFileName;
+            }
+            _context.Attach(applicant);
+             
+            _context.Entry(applicant).State=EntityState.Modified; //Es importante está línea de código para que nuevamente el ORM EF core haga seguimiento a applicant ya que en la línea 118 hemos colocado el SaveChangesAsync(), y necesitamos indicarle que vamos hacer más cambios
+            await _context.Experiences.AddRangeAsync(applicant.Experiences);
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+
+        [HttpGet]
         public async Task<ActionResult> Delete(int id)
         {
             var existe = await _context.Applicants.AnyAsync(x => x.Id == id);
@@ -137,7 +186,7 @@ namespace MasterDetailCRUD.Controllers
             selItem = new SelectListItem()
             {
                 Value = "Female",
-                Text = "Fenale"
+                Text = "Female"
             };
             selGender.Add(selItem);
 

@@ -6,7 +6,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<MasterDetailDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConexionSQL")));
+
+var connectionString = builder.Configuration.GetConnectionString("ConexionSQL");
+builder.Services.AddDbContext<MasterDetailDbContext>(options =>
+{
+    options.UseSqlServer(connectionString);
+    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking); //Para que los select solo sean de lectura
+});
 
 var app = builder.Build();
 

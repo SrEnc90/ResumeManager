@@ -1,18 +1,20 @@
 ﻿@model MasterDetailCRUD.Models.Applicant
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
 }
 
 
 <div class="col-11 mx-auto pt-0">
     <div class="card shadow">
         <div class="card-hearder bg-primary text-uppercase text-white" style="height: 45px;">
-            <h4>Create Applicant</h4>
+            <h4>Edit Applicant</h4>
         </div>
 
-        <form id="ApplicantForm" enctype="multipart/form-data" asp-action="Create">
+        <form id="ApplicantForm" enctype="multipart/form-data" asp-action="Edit" method="post">
 
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="PhotoUrl" />
             <div class="card-body">
                 <div class="row">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -68,7 +70,7 @@
                         <span asp-validation-for="ProfilePhoto" class="text-danger"></span>
 
                         <div class="form-group col-3 p-0">
-                            <img id="PreviewPhoto" src="~/image/noimage.jpg" alt="Logo Image" class="border rounded-3 ms-2 mt-2" style="width: 110px; height: 110px;" />
+                            <img id="PreviewPhoto" src="~/image/@Model.PhotoUrl" alt="Logo Image" class="border rounded-3 ms-2 mt-2" style="width: 110px; height: 110px;" />
                         </div>
                     </div>
 
@@ -92,10 +94,10 @@
                                 @* @foreach (var item in Model.Experiences) *@
                                 @for (int i = 0; i < Model.Experiences.Count; i++)
                                 {
-
-                                    <input type="hidden" asp-for="@Model.Experiences[i].IsDeleted" /> @*Para poder esconder(hide) las filas que queremos eliminar y aún pueda funcionar el model binding(acuerdate que para que funcione debe comenzar desde el 0: Experiences[0].CompanyName)*@
-
                                     <tr>
+
+                                        <input type="hidden" asp-for="@Model.Experiences[i].IsDeleted" /> @*Para poder esconder(hide) las filas que queremos eliminar y aún pueda funcionar el model binding(acuerdate que para que funcione debe comenzar desde el 0: Experiences[0].CompanyName)*@
+
                                         <td>
                                             @******************Html Helpers están obsoletos(Por eso lo comentamos y colocamos algo más actual)***********************@
 

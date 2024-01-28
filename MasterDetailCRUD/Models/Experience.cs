@@ -14,7 +14,8 @@ namespace MasterDetailCRUD.Models
 
         [ForeignKey("Applicant")]
         public int ApplicationId { get; set; }
-        public virtual Applicant Applicant { get; private set; } //Propiedad muy importante
+        //public virtual Applicant Applicant { get; private set; } //Propiedad muy importante
+        public Applicant Applicant { get; private set; } //Propiedad muy importante
 
         [Required(ErrorMessage = "Este campo es necesario")]
         public string CompanyName { get; set; }
@@ -25,6 +26,9 @@ namespace MasterDetailCRUD.Models
         [Range(1,25, ErrorMessage = "Debe tener entre 1 a 25 años de experiencia")]
         [Required(ErrorMessage = "Este campo es necesario")]
         public int YearsWorked { get; set; }
+
+        [NotMapped]
+        public bool IsDeleted { get; set; } = false;
 
     }
 }

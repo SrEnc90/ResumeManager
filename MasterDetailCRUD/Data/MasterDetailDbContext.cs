@@ -5,8 +5,8 @@ namespace MasterDetailCRUD.Data
 {
     public class MasterDetailDbContext : DbContext
     {
-        public virtual DbSet<Applicant> Applicants { get; set; }
-        public virtual DbSet<Experience> Experiences { get; set; }
+        public  DbSet<Applicant> Applicants { get; set; }
+        public  DbSet<Experience> Experiences { get; set; }
 
         /***************************Api Afluente o También llamado Afluent Api ****************************/
         //Colocar override onmodel + tab para que se autocomplete

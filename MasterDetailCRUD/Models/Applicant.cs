@@ -32,7 +32,8 @@ namespace MasterDetailCRUD.Models
         [DisplayName("Total de experiencia en años")]
         public int TotalExperiencie { get; set; }
 
-        public virtual List<Experience> Experiences { get; set; } = new List<Experience>(); //Detalle de experiencias
+        //public virtual List<Experience> Experiences { get; set; } = new List<Experience>(); //Detalle de experiencias
+        public List<Experience> Experiences { get; set; }
 
         [FileExtensions(Extensions = "jpg, jpeg, png, gif", ErrorMessage = "No tiene el formato correcto")]
         public string PhotoUrl { get; set; }
