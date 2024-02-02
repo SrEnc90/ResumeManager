@@ -34,12 +34,11 @@ namespace MasterDetailCRUD.Controllers
             Applicant applicant = new Applicant();
 
             applicant.Experiences = new List<Experience>() { new Experience() { ExperienceId = 1 } };
-
-            //applicant.Experiences.Add(new Experience() { ExperienceId = 1 });
-            //applicant.Experiences.Add(new Experience() { ExperienceId = 2 });
-            //applicant.Experiences.Add(new Experience() { ExperienceId = 3 });
-
             ViewBag.Gender = GetGender();
+
+            applicant.SoftwareExperiences = new List<SoftwareExperience>() { new SoftwareExperience { Id = 1 } };
+            ViewBag.Rating = GetRating();
+            ViewBag.Softwares = GetSoftware();
 
             return View(applicant);
         }
@@ -90,7 +89,11 @@ namespace MasterDetailCRUD.Controllers
 
             Applicant applicant = await _context.Applicants
                     .Include(a => a.Experiences)
+                    .Include(a => a.SoftwareExperiences)
                     .FirstOrDefaultAsync(a => a.Id == id);
+
+            ViewBag.Rating = GetRating();
+            ViewBag.Softwares = GetSoftware();
 
             return View(applicant);
         }
@@ -103,9 +106,12 @@ namespace MasterDetailCRUD.Controllers
 
             Applicant applicant = await _context.Applicants
                 .Include(a => a.Experiences)
+                .Include(a=>a.SoftwareExperiences)
                 .FirstOrDefaultAsync(x => x.Id == Id);
 
             ViewBag.Gender = GetGender();
+            ViewBag.Rating = GetRating();
+            ViewBag.Softwares = GetSoftware();
 
             if (applicant.Experiences.Count == 0)
             {
@@ -118,13 +124,18 @@ namespace MasterDetailCRUD.Controllers
         [HttpPost]
         public async Task<ActionResult<Applicant>> Edit(Applicant applicant)
         {
-
+            //Lo que hago me traigo todo el listado de experiencias y software de ese applicant mediante id, de ahí las elimino para volver a insertarlas con los realizados por el usuario
             List<Experience> experiences = await _context.Experiences.Where(x => x.ApplicationId == applicant.Id).ToListAsync();
             _context.RemoveRange(experiences);
             await _context.SaveChangesAsync();
 
+            List<SoftwareExperience> softwareExperiences = await _context.SoftwareExperiences.Where(d => d.ApplicantId == applicant.Id).ToListAsync();
+            _context.RemoveRange(softwareExperiences);
+            await _context.SaveChangesAsync();
+
             applicant.Experiences.RemoveAll(e => e.YearsWorked == 0);
             applicant.Experiences.RemoveAll(e => e.IsDeleted == true);//Para arreglar el problema del model binding
+            applicant.SoftwareExperiences.RemoveAll(e => e.IsHidden == true);
 
             if (applicant.ProfilePhoto != null)
             {
@@ -132,9 +143,10 @@ namespace MasterDetailCRUD.Controllers
                 applicant.PhotoUrl = uniqueFileName;
             }
             _context.Attach(applicant);
-             
-            _context.Entry(applicant).State=EntityState.Modified; //Es importante está línea de código para que nuevamente el ORM EF core haga seguimiento a applicant ya que en la línea 118 hemos colocado el SaveChangesAsync(), y necesitamos indicarle que vamos hacer más cambios
+            _context.Entry(applicant).State=EntityState.Modified; //Es importante está línea de código para que nuevamente el ORM EF core que haga seguimiento a applicant ya que en la línea 146 hemos colocado el SaveChangesAsync(), y necesitamos indicarle que vamos hacer más cambios
+            
             await _context.Experiences.AddRangeAsync(applicant.Experiences);
+            await _context.SoftwareExperiences.AddRangeAsync(applicant.SoftwareExperiences);
 
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -147,7 +159,10 @@ namespace MasterDetailCRUD.Controllers
             var existe = await _context.Applicants.AnyAsync(x => x.Id == id);
             if (!existe) return NotFound($"No existe el Applicant con id: {id}");
 
-            Applicant applicant = await _context.Applicants.Include(x => x.Experiences).FirstOrDefaultAsync(x => x.Id == id);
+            Applicant applicant = await _context.Applicants.Include(x => x.Experiences).Include(e => e.SoftwareExperiences).FirstOrDefaultAsync(x => x.Id == id);
+
+            ViewBag.Rating = GetRating();
+            ViewBag.Softwares = GetSoftware();
 
             return View(applicant);
         }
@@ -191,7 +206,47 @@ namespace MasterDetailCRUD.Controllers
             selGender.Add(selItem);
 
             return selGender;
+        }
 
+        private List<SelectListItem> GetRating()
+        {
+            List<SelectListItem> selRating = new List<SelectListItem>();
+
+            var selItem = new SelectListItem() { Value = "0", Text = "Select Rating" };
+            selRating.Insert(0, selItem);
+
+            for (int i = 0; i < 11; i++)
+            {
+                selItem = new SelectListItem()
+                {
+                    Value = i.ToString(),
+                    Text = i.ToString()
+                };
+                selRating.Add(selItem);
+            }
+            return selRating;
+        }
+
+        private async Task<List<SelectListItem>> GetSoftware()
+        {
+            List<SelectListItem> selSoftware = await _context.Softwares
+                .OrderBy(n => n.Name)
+                .Select(n =>
+                new SelectListItem()
+                {
+                    Value = n.Id.ToString(),
+                    Text = n.Name
+                }).ToListAsync();
+
+            var selItem = new SelectListItem()
+            {
+                Value = null,
+                Text = "Select Software"
+            };
+
+            selSoftware.Insert(0, selItem);
+
+            return selSoftware;
         }
     }
 }

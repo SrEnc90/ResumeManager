@@ -3,6 +3,7 @@ using MasterDetailCRUD.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MasterDetailCRUD.Migrations
 {
     [DbContext(typeof(MasterDetailDbContext))]
-    partial class MasterDetailDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240131030826_AddSoftwareExperience")]
+    partial class AddSoftwareExperience
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,6 +103,7 @@ namespace MasterDetailCRUD.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Notes")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -150,7 +154,7 @@ namespace MasterDetailCRUD.Migrations
             modelBuilder.Entity("MasterDetailCRUD.Models.SoftwareExperience", b =>
                 {
                     b.HasOne("MasterDetailCRUD.Models.Applicant", "Applicant")
-                        .WithMany("SoftwareExperiences")
+                        .WithMany()
                         .HasForeignKey("ApplicantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -169,8 +173,6 @@ namespace MasterDetailCRUD.Migrations
             modelBuilder.Entity("MasterDetailCRUD.Models.Applicant", b =>
                 {
                     b.Navigation("Experiences");
-
-                    b.Navigation("SoftwareExperiences");
                 });
 #pragma warning restore 612, 618
         }

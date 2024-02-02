@@ -51,41 +51,77 @@
                     </div>
 
                     <div class="col-md-6 btn-group">
-                        <img src="~/image/@Model.PhotoUrl" class="img-fluid" />
+                        <img src="~/image/@Model.PhotoUrl" class="img-fluid border rounded"
+                            width="300" height="300"/>
                     </div>
 
-                    <div class="p-2 my-2">
+                    <div class="p-2 my-2 bg-light btn-group">
 
-                        <table id="ExpTable" class="table table-sm table-hover" style="margin-bottom: 0 !important">
-                            <thead class="table-info">
-                                <tr>
-                                    <th class="text-center">Company Name</th>
-                                    <th class="text-center">Designation</th>
-                                    <th class="text-center">Years Worked</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @for (int i = 0; i < Model.Experiences.Count; i++)
-                                {
+                        <div class="container col-6 p-lg-0 bg-light">
+
+                            <table id="ExpTable" class="table table-sm table-hover CodesTable" style="margin-bottom: 0 !important">
+                                <thead class="table-info">
                                     <tr>
-                                        <td>
-                                            <input type="text" asp-for="@Model.Experiences[i].CompanyName" class="form-control-plaintext" readonly>
-                                        </td>
-                                        <td>
-                                            <input type="text" asp-for="@Model.Experiences[i].Designation" class="form-control-plaintext" readonly>
-                                        </td>
-                                        <td>
-                                            <input type="number" asp-for="@Model.Experiences[i].YearsWorked" class="form-control-plaintext" readonly>
-                                        </td>
-                                        <td>
-
-                                        </td>
+                                        <th class="text-center">Company Name</th>
+                                        <th class="text-center">Designation</th>
+                                        <th class="text-center">Years Worked</th>
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
-                        <input type="hidden" id="hdnLastIndex" value="0" />
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.Experiences.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <input type="text" asp-for="@Model.Experiences[i].CompanyName" class="form-control-plaintext">
+                                            </td>
+                                            <td>
+                                                <input type="text" asp-for="@Model.Experiences[i].Designation" class="form-control-plaintext">
+                                            </td>
+                                            <td>
+                                                <input type="number" asp-for="@Model.Experiences[i].YearsWorked" class="form-control-plaintext">
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                        <div class="container col-1"></div>
+
+                        <div class="container col-5">
+
+                            <div class="col-md-12 p-0 m-0 bg-light">
+                                <table id="SoftwareTable" class="table table-sm table-hover CodesTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Software</th>
+                                            <th>Rating</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @for (int i = 0; i < Model.SoftwareExperiences.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <select asp-for="@Model.SoftwareExperiences[i].SoftwareId" class="form-control-plaintext"
+                                                            asp-items="@(await ViewBag.Softwares)"
+                                                            onchange="JsonProductChange(this)"></select>
+                                                </td>
+                                                <td>
+                                                    <select asp-for="@Model.SoftwareExperiences[i].Rating" class="form-control-plaintext"
+                                                            asp-items="@ViewBag.Rating"></select>
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
                     </div>
                 </div>
             </div>

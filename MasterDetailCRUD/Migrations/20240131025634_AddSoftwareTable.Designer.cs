@@ -3,6 +3,7 @@ using MasterDetailCRUD.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MasterDetailCRUD.Migrations
 {
     [DbContext(typeof(MasterDetailDbContext))]
-    partial class MasterDetailDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240131025634_AddSoftwareTable")]
+    partial class AddSoftwareTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -88,37 +91,7 @@ namespace MasterDetailCRUD.Migrations
                     b.ToTable("Experiences");
                 });
 
-            modelBuilder.Entity("MasterDetailCRUD.Models.SoftwareExperience", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ApplicantId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SoftwareId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicantId");
-
-                    b.HasIndex("SoftwareId");
-
-                    b.ToTable("SoftwareExperiences");
-                });
-
-            modelBuilder.Entity("MasterDetailCRUD.Models.Softwares", b =>
+            modelBuilder.Entity("MasterDetailCRUD.Models.Software", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -147,30 +120,9 @@ namespace MasterDetailCRUD.Migrations
                     b.Navigation("Applicant");
                 });
 
-            modelBuilder.Entity("MasterDetailCRUD.Models.SoftwareExperience", b =>
-                {
-                    b.HasOne("MasterDetailCRUD.Models.Applicant", "Applicant")
-                        .WithMany("SoftwareExperiences")
-                        .HasForeignKey("ApplicantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MasterDetailCRUD.Models.Softwares", "Softwares")
-                        .WithMany()
-                        .HasForeignKey("SoftwareId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Applicant");
-
-                    b.Navigation("Softwares");
-                });
-
             modelBuilder.Entity("MasterDetailCRUD.Models.Applicant", b =>
                 {
                     b.Navigation("Experiences");
-
-                    b.Navigation("SoftwareExperiences");
                 });
 #pragma warning restore 612, 618
         }

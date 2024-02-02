@@ -35,6 +35,8 @@ namespace MasterDetailCRUD.Models
         //public virtual List<Experience> Experiences { get; set; } = new List<Experience>(); //Detalle de experiencias
         public List<Experience> Experiences { get; set; }
 
+        public List<SoftwareExperience> SoftwareExperiences { get; set; }
+
         [FileExtensions(Extensions = "jpg, jpeg, png, gif", ErrorMessage = "No tiene el formato correcto")]
         public string PhotoUrl { get; set; }
 

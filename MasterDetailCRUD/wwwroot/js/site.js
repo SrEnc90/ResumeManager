@@ -13,7 +13,14 @@ function CalcTotalExperiencies() {
     let i;
 
     for (i = 0; i < x.length; i++) {
-        totalExp = totalExp + eval(x[i].value);
+
+        let idofIsDeleted = i + "__IsDeleted";
+        let hidIsDelId = document.querySelector(`[id$='${idofIsDeleted}']`).id;
+
+        console.log(typeof (document.getElementById(hidIsDelId).value));
+
+        if (document.getElementById(hidIsDelId).value !== "true")
+            totalExp = totalExp + eval(x[i].value);
     }
 
     document.getElementById('TotalExperiencie').value = totalExp;
@@ -21,15 +28,29 @@ function CalcTotalExperiencies() {
     return;
 }
 
+function hasClass(elem, className) {
+    return elem.classList.contains(className);
+}
+
 document.addEventListener('change', function (e) {
-    if (e.target.classList.contains('YearsWorked')) {
+    // Anterior(Hace los mismo)
+    //if (e.target.classList.contains('YearsWorked')) {
+    //    CalcTotalExperiencies();
+    //}
+
+    if (hasClass(e.target, 'YearsWorked')) {
         CalcTotalExperiencies();
     }
+
 }, false);
 
 function DeleteItem(btn) {
 
     let table = document.getElementById("ExpTable");
+
+    if (btn.id.indexOf("Soft") > 0)
+        table = document.getElementById("SoftwareTable");
+
     let rows = table.getElementsByTagName("tr");
 
     if (rows.length == 2) {
@@ -38,7 +59,15 @@ function DeleteItem(btn) {
     }
 
     let btnIdx = btn.id.replaceAll('btnRemove-', '');
+    //let idofIsDeleted = btnIdx + "__IsDeleted";
+
+    if (btn.id.indexOf("Soft") > 0)
+        btnIdx = btn.id.replaceAll('btnRemoveSoft-', '');
+
     let idofIsDeleted = btnIdx + "__IsDeleted";
+
+    if (btn.id.indexOf("Soft") > 0)
+        idofIsDeleted = btnIdx + "__IsHidden";
 
     let hidIsDelId = document.querySelector(`[id$='${idofIsDeleted}']`).id;
 
@@ -51,7 +80,11 @@ function DeleteItem(btn) {
 }
 
 function AddItem(btn) {
-    var table = document.getElementById("ExpTable")
+    var table = document.getElementById("ExpTable");
+
+    if (btn.id == "btnAddSoftware")
+        table = document.getElementById("SoftwareTable");
+
     var rows = table.querySelectorAll('tr');
 
     var rowOuterHTML = rows[rows.length - 1].outerHTML;
@@ -70,8 +103,6 @@ function AddItem(btn) {
     newRow.innerHTML = rowOuterHTML;
 
     var x = table.getElementsByTagName("INPUT");
-
-    console.log(x.length);
 
     for (let cnt = 0; cnt < x.length; cnt++) {
         if (x[cnt].type == "text" && x[cnt].id.indexOf(`_${nextRowIdx}_`) > 0) {

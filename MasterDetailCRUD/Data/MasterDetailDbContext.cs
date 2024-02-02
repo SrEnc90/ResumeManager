@@ -8,6 +8,10 @@ namespace MasterDetailCRUD.Data
         public  DbSet<Applicant> Applicants { get; set; }
         public  DbSet<Experience> Experiences { get; set; }
 
+        public DbSet<Softwares> Softwares { get; set; }
+
+        public DbSet<SoftwareExperience> SoftwareExperiences { get; set; }
+
         /***************************Api Afluente o También llamado Afluent Api ****************************/
         //Colocar override onmodel + tab para que se autocomplete
         protected override void OnModelCreating(ModelBuilder modelBuilder)

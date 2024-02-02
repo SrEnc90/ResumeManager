@@ -74,68 +74,117 @@
                         </div>
                     </div>
 
-                    <div class="p-2 my-2 bg-light">
+                    <div class="p-2 my-2 bg-light btn-group">
 
-                        <table id="ExpTable" class="table table-sm table-hover CodesTable" style="margin-bottom: 0 !important">
-                            <thead class="table-info">
-                                <tr>
-                                    <th class="text-center">Company Name</th>
-                                    <th class="text-center">Designation</th>
-                                    <th class="text-center">Years Worked</th>
-                                    <th class="text-center" style="width: 75px;">
-                                        <button id="btnAddExperience" class="btn btn-sm btn-secondary visible" type="button" onclick="AddItem(this)" >
-                                        @* style="left: 94%; position: absolute;"> *@
-                                            ADD
-                                        </button>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @* @foreach (var item in Model.Experiences) *@
-                                @for (int i = 0; i < Model.Experiences.Count; i++)
-                                {
+                        <div class="container col-6 p-lg-0 bg-light">
+
+                            <table id="ExpTable" class="table table-sm table-hover CodesTable" style="margin-bottom: 0 !important">
+                                <thead class="table-info">
                                     <tr>
-
-                                        <input type="hidden" asp-for="@Model.Experiences[i].IsDeleted" /> @*Para poder esconder(hide) las filas que queremos eliminar y aún pueda funcionar el model binding(acuerdate que para que funcione debe comenzar desde el 0: Experiences[0].CompanyName)*@
-
-                                        <td>
-                                            @******************Html Helpers están obsoletos(Por eso lo comentamos y colocamos algo más actual)***********************@
-
-                                            @* @Html.EditorFor(x => x.Experiences[i].CompanyName, new { ValidationMessage = "El nombre debe ser válido", 
-                                                htmlAttributes = new { @class="form-control" }})
-                                            @Html.ValidationMessageFor(x => x.Experiences[i].CompanyName, "", new { @class = "text-danger" }) *@
-                                            <input type="text" asp-for="@Model.Experiences[i].CompanyName" class="form-control">
-                                            <span asp-validation-for="@Model.Experiences[i].CompanyName" class="text-danger"></span>
-                                        </td>
-                                        <td>
-                                            @* @Html.EditorFor(x => x.Experiences[i].Designation, new { ValidationMessage = "El nombre debe ser válido", 
-                                                htmlAttributes = new { @class="form-control" }})
-                                            @Html.ValidationMessageFor(x => x.Experiences[i].Designation, "", new { @class = "text-danger" }) *@
-                                            <input type="text" asp-for="@Model.Experiences[i].Designation" class="form-control">
-                                            <span asp-validation-for="@Model.Experiences[i].Designation" class="text-danger"></span>
-                                        </td>
-                                        <td>
-                                            @* @Html.EditorFor(x => x.Experiences[i].YearsWorked, new { ValidationMessage = "El nombre debe ser válido",
-                                                htmlAttributes = new { @class="form-control" }})
-                                            @Html.ValidationMessageFor(x => x.Experiences[i].YearsWorked, "", new { @class = "text-danger" }) *@
-                                            <input type="number" asp-for="@Model.Experiences[i].YearsWorked" class="form-control YearsWorked">
-                                            <span asp-validation-for="@Model.Experiences[i].YearsWorked" class="text-danger"></span>
-                                        </td>
-                                        <td style="width: 60px;">
-
-                                            @* <button id="btnDummy-@i" type="button" class="btn btn-sm invisible">Dummy</button> *@
-                                            
-                                            <button id="btnRemove-@i" type="button" class="btn btn-sm btn-danger visible" onclick="DeleteItem(this)" >
-                                                @* style="left: 88%; position: absolute;"> *@
-                                                DELETE
+                                        <th class="text-center">Company Name</th>
+                                        <th class="text-center">Designation</th>
+                                        <th class="text-center">Years Worked</th>
+                                        <th class="text-center" style="width: 75px;">
+                                            <button id="btnAddExperience" class="btn btn-sm btn-secondary visible" type="button" onclick="AddItem(this)">
+                                                @* style="left: 94%; position: absolute;"> *@
+                                                ADD
                                             </button>
-                                        </td>
+                                        </th>
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
-                        <input type="hidden" id="hdnLastIndex" value="0" />
+                                </thead>
+                                <tbody>
+                                    @* @foreach (var item in Model.Experiences) *@
+                                    @for (int i = 0; i < Model.Experiences.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @******************Html Helpers están obsoletos(Por eso lo comentamos y colocamos algo más actual)***********************@
+
+                                                @* @Html.EditorFor(x => x.Experiences[i].CompanyName, new { ValidationMessage = "El nombre debe ser válido",
+                                            htmlAttributes = new { @class="form-control" }})
+                                            @Html.ValidationMessageFor(x => x.Experiences[i].CompanyName, "", new { @class = "text-danger" }) *@
+                                                <input type="text" asp-for="@Model.Experiences[i].CompanyName" class="form-control">
+                                                <span asp-validation-for="@Model.Experiences[i].CompanyName" class="text-danger"></span>
+                                            </td>
+                                            <td>
+                                                @* @Html.EditorFor(x => x.Experiences[i].Designation, new { ValidationMessage = "El nombre debe ser válido",
+                                            htmlAttributes = new { @class="form-control" }})
+                                            @Html.ValidationMessageFor(x => x.Experiences[i].Designation, "", new { @class = "text-danger" }) *@
+                                                <input type="text" asp-for="@Model.Experiences[i].Designation" class="form-control">
+                                                <span asp-validation-for="@Model.Experiences[i].Designation" class="text-danger"></span>
+                                            </td>
+                                            <td>
+                                                @* @Html.EditorFor(x => x.Experiences[i].YearsWorked, new { ValidationMessage = "El nombre debe ser válido",
+                                            htmlAttributes = new { @class="form-control" }})
+                                            @Html.ValidationMessageFor(x => x.Experiences[i].YearsWorked, "", new { @class = "text-danger" }) *@
+                                                <input type="number" asp-for="@Model.Experiences[i].YearsWorked" class="form-control YearsWorked">
+                                                <span asp-validation-for="@Model.Experiences[i].YearsWorked" class="text-danger"></span>
+                                            </td>
+                                            <td style="width: 60px;">
+
+                                                @* <button id="btnDummy-@i" type="button" class="btn btn-sm invisible">Dummy</button> *@
+
+                                                <input type="hidden" asp-for="@Model.Experiences[i].IsDeleted" /> @*Para poder esconder(hide) las filas que queremos eliminar y aún pueda funcionar el model binding(acuerdate que para que funcione debe comenzar desde el 0: Experiences[0].CompanyName)*@
+                                                <button id="btnRemove-@i" type="button" class="btn btn-sm btn-danger visible" onclick="DeleteItem(this)">
+                                                    @* style="left: 88%; position: absolute;"> *@
+                                                    DELETE
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                        <div class="container col-1"></div>
+
+                        <div class="container col-5">
+
+                            <div class="col-md-12 p-0 m-0 bg-light">
+                                <table id="SoftwareTable" class="table table-sm table-hover CodesTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Software</th>
+                                            <th>Rating</th>
+                                            <th style="width: 60px;">
+                                                <button id="btnAddSoftware" type="button" class="btn btn-sm btn-secondary visible" onclick="AddItem(this)">
+                                                    Add
+                                                </button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @for (int i = 0; i < Model.SoftwareExperiences.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <select asp-for="@Model.SoftwareExperiences[i].SoftwareId" class="form-control"
+                                                            asp-items="@(await ViewBag.Softwares)"
+                                                            onchange="JsonProductChange(this)"></select>
+                                                </td>
+                                                <td>
+                                                    <input type="hidden" asp-for="@Model.SoftwareExperiences[i].IsHidden" />
+                                                    <select asp-for="@Model.SoftwareExperiences[i].Rating" class="form-control"
+                                                            asp-items="@ViewBag.Rating"></select>
+                                                </td>
+                                                <td style="width: 60px;">
+                                                    <button id="btnRemoveSoft-@i" type="button" class="btn btn-sm btn-danger" onclick="DeleteItem(this)">
+                                                        Delete
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                        
                     </div>
+                    <input type="hidden" id="hdnLastIndex" value="0" />
                 </div>
             </div>
 
